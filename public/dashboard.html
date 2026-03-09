@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your personal habit tracking dashboard. Add habits, mark completions, and see your daily progress.">
+  <title>Dashboard – Habit Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <span>🎯</span> Habit Tracker
+    </div>
+    <button class="btn-logout" id="logoutBtn">Log Out</button>
+  </nav>
+
+  <div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <h1>Your Habits</h1>
+      <p class="greeting" id="greeting">Stay consistent, stay unstoppable.</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-section" id="progressSection">
+      <h2>Today's Progress</h2>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+      </div>
+      <div class="progress-stats">
+        <span id="progressText">0 of 0 completed</span>
+        <span class="percentage" id="progressPercentage">0%</span>
+      </div>
+    </div>
+
+    <!-- Add Habit -->
+    <div class="add-habit-section">
+      <input type="text" id="habitInput" placeholder="Add a new habit…" maxlength="100">
+      <button class="btn-add" id="addHabitBtn">+ Add</button>
+    </div>
+
+    <!-- Alert -->
+    <div id="alert" class="alert"></div>
+
+    <!-- Habits List -->
+    <div class="habits-list" id="habitsList">
+      <!-- Habit cards rendered dynamically -->
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+      <div class="icon">🌱</div>
+      <p>No habits yet. Add your first habit above!</p>
+    </div>
+  </div>
+
+  <script src="js/habits.js"></script>
+</body>
+</html>
