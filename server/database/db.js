@@ -4,8 +4,10 @@ const path = require('path');
 const dbPath = process.env.DB_PATH || path.join(__dirname, '..', '..', 'habit_tracker.db');
 const db = new Database(dbPath);
 
-// Enable WAL mode for better concurrency
-db.pragma('journal_mode = WAL');
+// Use WAL mode in production for concurrency; DELETE mode in tests for external writer compatibility
+if (!process.env.DB_PATH) {
+  db.pragma('journal_mode = WAL');
+}
 db.pragma('foreign_keys = ON');
 
 // ── Create Tables ───────────────────────────────────────────────────────────

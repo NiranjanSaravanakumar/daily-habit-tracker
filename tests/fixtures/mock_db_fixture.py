@@ -57,10 +57,18 @@ CREATE TABLE IF NOT EXISTS habit_logs (
 );
 """
 
+# Cache the bcrypt hash so we don't re-hash on every test reset
+_cached_pw_hash = None
 
-def _hash_password(plain: str) -> str:
-    """Hash a password with bcrypt (compatible with bcryptjs on the Node side)."""
-    return bcrypt.hashpw(plain.encode("utf-8"), bcrypt.gensalt(rounds=12)).decode("utf-8")
+
+def _get_password_hash(plain: str) -> str:
+    """Hash a password with bcrypt, caching the result for performance."""
+    global _cached_pw_hash
+    if _cached_pw_hash is None:
+        _cached_pw_hash = bcrypt.hashpw(
+            plain.encode("utf-8"), bcrypt.gensalt(rounds=12)
+        ).decode("utf-8")
+    return _cached_pw_hash
 
 
 def _seed_database(db_path: str):
@@ -70,15 +78,13 @@ def _seed_database(db_path: str):
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
 
-    # Seed verified user
-    pw_hash = _hash_password(VERIFIED_USER["password"])
+    pw_hash = _get_password_hash(VERIFIED_USER["password"])
     cur.execute(
         "INSERT INTO users (name, email, password_hash, is_verified) VALUES (?, ?, ?, 1)",
         (VERIFIED_USER["name"], VERIFIED_USER["email"], pw_hash),
     )
     user_id = cur.lastrowid
 
-    # Seed habits
     for habit_name in SEEDED_HABITS:
         cur.execute(
             "INSERT INTO habits (user_id, habit_name) VALUES (?, ?)",
@@ -128,7 +134,7 @@ def mock_db():
     # 3. Seed test data
     _seed_database(db_path)
 
-    # 4. Start test server
+    # 4. Start test server (DB_PATH disables WAL mode for external writer compat)
     env = {
         **os.environ,
         "PORT": str(TEST_PORT),
@@ -167,7 +173,6 @@ def mock_db():
     except subprocess.TimeoutExpired:
         server_proc.kill()
 
-    # Delete temp database
     try:
         os.unlink(db_path)
     except OSError:
@@ -177,13 +182,13 @@ def mock_db():
 @pytest.fixture(autouse=True)
 def reset_db(mock_db):
     """
-    Per-test fixture that resets the mock database to its seeded state before
-    each test, keeping tests isolated.
+    Per-test fixture that resets the mock database to its seeded state.
+    Since DB_PATH disables WAL mode in db.js, external writes via Python
+    sqlite3 are immediately visible to the Node server.
     """
     conn = sqlite3.connect(mock_db)
     cur = conn.cursor()
 
-    # Clear all data
     cur.execute("DELETE FROM habit_logs")
     cur.execute("DELETE FROM habits")
     cur.execute("DELETE FROM otps")
@@ -195,13 +200,4 @@ def reset_db(mock_db):
     # Re-seed
     _seed_database(mock_db)
 
-    # Force WAL checkpoint so the Node server (better-sqlite3) sees fresh data
-    conn = sqlite3.connect(mock_db)
-    conn.execute("PRAGMA wal_checkpoint(FULL)")
-    conn.close()
-
-    # Small delay to ensure the Node server picks up the changes
-    time.sleep(0.1)
-
     yield
-
