@@ -29,7 +29,6 @@ class TestSignup:
 
         assert "Sign Up" in page.title()
 
-    @pytest.mark.skip(reason="OTP email not configured yet – re-enable after implementing OTP")
     def test_successful_signup_redirects_to_otp(self, page):
         """
         Filling in valid details and submitting should show a success

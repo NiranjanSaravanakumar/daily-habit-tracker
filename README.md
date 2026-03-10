@@ -203,6 +203,41 @@ pytest tests -v -m auth
 
 ---
 
+## 🧑‍💻 Test Accounts
+
+Predefined test accounts are available for development and automated testing. These accounts are **pre-verified** (OTP is skipped) and ready to log in immediately.
+
+### Credentials
+
+| Name               | Email                     | Password   |
+| ------------------ | ------------------------- | ---------- |
+| Test User          | `testuser1@example.com`   | `Test@123` |
+| Demo User          | `demo@example.com`        | `Demo@123` |
+| Automation Tester  | `automation@example.com`  | `Auto@123` |
+
+### Seed Test Users
+
+Run the seeder script to create all test accounts with sample habits:
+
+```bash
+npm run seed
+# or
+node seedTestUsers.js
+```
+
+The script is **idempotent** — it skips any user that already exists. It **will not run** if `NODE_ENV=production`.
+
+### TEST_MODE
+
+Set `TEST_MODE=true` in `.env` to enable test mode. In test mode:
+
+- Signup **auto-verifies** the user (no OTP generation or email)
+- Test accounts can log in directly without email verification
+
+> ⚠️ **Safety:** Test accounts are only created in development/test environments. The seed script refuses to run when `NODE_ENV=production`, and `TEST_MODE` should be set to `false` in production.
+
+---
+
 ## 📸 Screenshots
 
 <!-- Add your screenshots here -->

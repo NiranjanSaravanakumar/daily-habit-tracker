@@ -32,6 +32,47 @@ function authHeaders() {
   }
 })();
 
+// ── Highlight today's day column ────────────────────────────────────────────
+
+(function highlightToday() {
+  const jsDayToColumn = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 0: 6 }; // Mon=0 … Sun=6
+  const todayIndex = jsDayToColumn[new Date().getDay()];
+  const columns = document.querySelectorAll('.day-column');
+
+  // Move #habitsList into today's column
+  const habitsList = document.getElementById('habitsList');
+  if (columns[todayIndex] && habitsList) {
+    columns[todayIndex].appendChild(habitsList);
+    columns[todayIndex].style.fontWeight = '500';
+    const header = columns[todayIndex].querySelector('.day-header');
+    if (header) {
+      header.style.fontWeight = '700';
+      header.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+    }
+  }
+
+  // Add placeholder checklist items to non-today columns
+  columns.forEach((col, i) => {
+    if (i !== todayIndex) {
+      const placeholder = col.querySelector('.day-habits') || col;
+      const items = [];
+      for (let j = 0; j < 4; j++) {
+        items.push(`
+          <div class="habit-card" style="opacity:0.4;pointer-events:none;">
+            <label class="habit-checkbox">
+              <input type="checkbox" disabled>
+              <span class="checkmark"></span>
+            </label>
+            <span class="habit-name">Check list</span>
+          </div>
+        `);
+      }
+      const target = col.querySelector('.day-habits');
+      if (target) target.innerHTML = items.join('');
+    }
+  });
+})();
+
 // ── Alert ───────────────────────────────────────────────────────────────────
 
 function showAlert(message, type = 'error') {

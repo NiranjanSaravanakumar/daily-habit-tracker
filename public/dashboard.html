@@ -11,17 +11,33 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="logo">
-      <span>🎯</span> Habit Tracker
+      <span>🌿</span> Habit Tracker
     </div>
     <button class="btn-logout" id="logoutBtn">Log Out</button>
   </nav>
 
+  <!-- Hero Banner -->
+  <div class="hero-banner">
+    <img src="images/hero-banner.png" alt="Misty forest" id="heroBanner">
+  </div>
+
   <div class="dashboard-container">
-    <!-- Header -->
-    <div class="dashboard-header">
-      <h1>Your Habits</h1>
+    <!-- Planner Header -->
+    <div class="planner-header">
+      <div class="planner-logo">🌱</div>
+      <h1>Weekly Planner</h1>
       <p class="greeting" id="greeting">Stay consistent, stay unstoppable.</p>
     </div>
+
+    <!-- Add Habit -->
+    <div class="add-habit-section">
+      <span class="plus-icon">+</span>
+      <input type="text" id="habitInput" placeholder="New Week To do list" maxlength="100">
+      <button class="btn-add" id="addHabitBtn">Add</button>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider"></div>
 
     <!-- Progress -->
     <div class="progress-section" id="progressSection">
@@ -35,18 +51,41 @@
       </div>
     </div>
 
-    <!-- Add Habit -->
-    <div class="add-habit-section">
-      <input type="text" id="habitInput" placeholder="Add a new habit…" maxlength="100">
-      <button class="btn-add" id="addHabitBtn">+ Add</button>
-    </div>
-
     <!-- Alert -->
     <div id="alert" class="alert"></div>
 
-    <!-- Habits List -->
-    <div class="habits-list" id="habitsList">
-      <!-- Habit cards rendered dynamically -->
+    <!-- Weekly Grid -->
+    <div class="weekly-grid" id="weeklyGrid">
+      <div class="day-column" data-day="0">
+        <div class="day-header mon">Monday</div>
+        <div class="habits-list" id="habitsList">
+          <!-- Habit cards rendered dynamically -->
+        </div>
+      </div>
+      <div class="day-column" data-day="1">
+        <div class="day-header tue">Tuesday</div>
+        <div class="day-habits"></div>
+      </div>
+      <div class="day-column" data-day="2">
+        <div class="day-header wed">Wednesday</div>
+        <div class="day-habits"></div>
+      </div>
+      <div class="day-column" data-day="3">
+        <div class="day-header thu">Thursday</div>
+        <div class="day-habits"></div>
+      </div>
+      <div class="day-column" data-day="4">
+        <div class="day-header fri">Friday</div>
+        <div class="day-habits"></div>
+      </div>
+      <div class="day-column" data-day="5">
+        <div class="day-header sat">Saturday</div>
+        <div class="day-habits"></div>
+      </div>
+      <div class="day-column" data-day="6">
+        <div class="day-header sun">Sunday</div>
+        <div class="day-habits"></div>
+      </div>
     </div>
 
     <!-- Empty State -->
@@ -54,6 +93,13 @@
       <div class="icon">🌱</div>
       <p>No habits yet. Add your first habit above!</p>
     </div>
+  </div>
+
+  <!-- Side Nav Dots (decorative) -->
+  <div class="side-nav">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
   </div>
 
   <script src="js/habits.js"></script>

@@ -40,6 +40,12 @@ async function signup(req, res) {
       db.prepare('INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)').run(name, email, passwordHash);
     }
 
+    // ── TEST_MODE: skip OTP, auto-verify ──────────────────────────────────
+    if (process.env.TEST_MODE === 'true') {
+      db.prepare('UPDATE users SET is_verified = 1 WHERE email = ?').run(email);
+      return res.status(200).json({ message: 'Account created and auto-verified (TEST_MODE).' });
+    }
+
     // Generate 6-digit OTP
     const otpCode = String(Math.floor(100000 + Math.random() * 900000));
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
