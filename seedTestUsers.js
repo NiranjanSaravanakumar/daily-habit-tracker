@@ -4,10 +4,9 @@
  * seedTestUsers.js – Inserts predefined test accounts into the database.
  *
  * Usage:   node seedTestUsers.js
- *            npm run seed
  *
  * Safety:  Only runs when NODE_ENV is NOT "production".
- *          Skips any user whose email already exists (idempotent).
+ *          Skips any user whose email already exists.
  */
 
 require('dotenv').config();
@@ -25,12 +24,6 @@ const db = require('./server/database/db');
 // ── Test Accounts ───────────────────────────────────────────────────────────
 
 const TEST_USERS = [
-  {
-    name: 'Test User',
-    email: 'test@example.com',
-    password: 'password123',
-    habits: ['Morning Run', 'Read 10 Pages', 'Drink Water'],
-  },
   {
     name: 'Test User',
     email: 'testuser1@example.com',
